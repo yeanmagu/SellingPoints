@@ -1,0 +1,43 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [object_id] = OBJECT_ID(N'{databaseOwner}[{objectQualifier}Ax_SellingPoints_SellingPoints]') AND type in (N'U'))
+	DROP TABLE {databaseOwner}[{objectQualifier}Ax_SellingPoints_Points]
+GO
+
+CREATE TABLE {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints
+(
+	[Id] INT NOT NULL IDENTITY (1, 1),
+	[Nombre] NVARCHAR(MAX) NULL,
+	[Departamento] NVARCHAR(MAX) NOT NULL,
+	[Ciudad] NVARCHAR(MAX) NOT NULL,
+	[Description] NVARCHAR(MAX) NULL,
+	[Status] NVARCHAR(20) NOT NULL,
+	[Telefono] NVARCHAR(MAX) NOT NULL,
+	[Lat]Decimal(8,6) NOT NULL,
+	[Long]Decimal(9,6) NOT NULL,
+	[PortalId]Int NOT NULL,
+	[Exclusive]Int NOT NULL,
+	[CreatedOnDate] DATETIME NOT NULL,
+	[LastModifiedOnDate] DATETIME NOT NULL
+)
+GO
+
+
+ALTER TABLE {databaseOwner}[{objectQualifier}Ax_SellingPoints_SellingPoints] ADD CONSTRAINT [PK_{objectQualifier}Ax_SellingPoints_SellingPoints] PRIMARY KEY CLUSTERED ([Id])
+GO
+
+CREATE INDEX index_Departamento ON {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints (Departamento);
+CREATE INDEX index_Ciudad ON {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints (Ciudad);
+
+
+/************************************************************/
+/*****              SqlDataProvider                     *****/
+/************************************************************/
