@@ -1,0 +1,71 @@
+19/01/2023 10:50:55 Ha ocurrido un error al consultar los registros error: Invalid column name 'Exclusive'. 
+19/01/2023 10:51:24 Ha ocurrido un error al consultar los registros error: Invalid column name 'Exclusive'. 
+19/01/2023 11:12:13 Ha ocurrido un error al consultar los registros error: Invalid column name 'Exclusive'., System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Exclusive'.
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetItems(String searchTerm, Int32 pageIndex, Int32 pageSize, Int32 PortalId)
+   at Arkix.Modules.SellingPoints.Services.PointsController.<GET>d__7.MoveNext()
+ClientConnectionId:937e816f-e9df-41a9-83fd-f3f08e065247
+Error Number:207,State:1,Class:16
+ClientConnectionId before routing:c7267774-3f61-46ec-944b-c810b277867d
+Routing Destination:eaabd6ebac5c.tr15241.eastus2-a.worker.database.windows.net,11048
+19/01/2023 11:13:43 Ha ocurrido un error al consultar los registros error: Invalid column name 'Exclusive'., System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Exclusive'.
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetItems(String searchTerm, Int32 pageIndex, Int32 pageSize, Int32 PortalId)
+   at Arkix.Modules.SellingPoints.Services.PointsController.<GET>d__7.MoveNext()
+ClientConnectionId:937e816f-e9df-41a9-83fd-f3f08e065247
+Error Number:207,State:1,Class:16
+ClientConnectionId before routing:c7267774-3f61-46ec-944b-c810b277867d
+Routing Destination:eaabd6ebac5c.tr15241.eastus2-a.worker.database.windows.net,11048
+19/01/2023 11:23:11 Ha ocurrido un error al consultar los registros error: Invalid object name 'Ax_SellingPoints_SellingPoints'., System.Data.SqlClient.SqlException (0x80131904): Invalid object name 'Ax_SellingPoints_SellingPoints'.
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetItems(String searchTerm, Int32 pageIndex, Int32 pageSize, Int32 PortalId)
+   at Arkix.Modules.SellingPoints.Services.PointsController.<GET>d__7.MoveNext()
+ClientConnectionId:d768b553-ec95-4e4f-90f2-86ecec1dbe19
+Error Number:208,State:1,Class:16
+ClientConnectionId before routing:4065d559-743d-419f-9c83-1c1b7b98b18a
+Routing Destination:eaabd6ebac5c.tr15241.eastus2-a.worker.database.windows.net,11048
+19/01/2023 12:14:11 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":0,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:17:07 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:17:15 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:17:25 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:17:31 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:17:33 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:20:25 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:22:11 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:25:29 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:25:32 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:25:55 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:30:37 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:30:57 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:32:04 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:33:41 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:33:55 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 12:36:03 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:15:09 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:15:15 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:15:25 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":2,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:16:41 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":2,"Department":"Magdalena","City":"","Status":"PUBLIC"}
+19/01/2023 14:18:02 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:19:14 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:19:58 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"Magdalena","City":"","Status":"PUBLIC"}
+19/01/2023 14:23:09 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:23:30 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"Magdalena","City":"","Status":"PUBLIC"}
+19/01/2023 14:23:30 Ha ocurrido un error al consultar los registros error: Invalid column name 'Magdalena'., System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Magdalena'.
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetItems(GetMapRequest getMapRequest)
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetPublicItems(GetMapRequest getMapRequest)
+   at Arkix.Modules.SellingPoints.Services.PointsController.<GetPublic>d__5.MoveNext()
+ClientConnectionId:55a8df89-9883-406e-b058-375ca455f428
+Error Number:207,State:1,Class:16
+ClientConnectionId before routing:ac378210-cdbd-4a37-b1f2-176a1409090a
+Routing Destination:eaabd6ebac5c.tr15241.eastus2-a.worker.database.windows.net,11048
+19/01/2023 14:27:13 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:27:19 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":1,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:30:13 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"","City":"","Status":"PUBLIC"}
+19/01/2023 14:30:13 parametros: WHERE Status = 'PUBLIC' and PortalId = 10
+19/01/2023 14:30:35 Consultando información para los siguientes parametros {"PageIndex":0,"PortalId":10,"PageSize":10,"Exclusive":0,"Department":"Magdalena","City":"","Status":"PUBLIC"}
+19/01/2023 14:30:35 parametros: WHERE Status = 'PUBLIC' and PortalId = 10 and Departamento = Magdalena
+19/01/2023 14:30:35 Ha ocurrido un error al consultar los registros error: Invalid column name 'Magdalena'., System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Magdalena'.
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetItems(GetMapRequest getMapRequest)
+   at Arkix.Modules.SellingPoints.Components.ItemRepository.GetPublicItems(GetMapRequest getMapRequest)
+   at Arkix.Modules.SellingPoints.Services.PointsController.<GetPublic>d__5.MoveNext()
+ClientConnectionId:f5c4a6b8-39f3-40ae-a304-e6458b980451
+Error Number:207,State:1,Class:16
+ClientConnectionId before routing:2020ac6b-c30c-46b4-b5f4-d431fa389c6b
+Routing Destination:eaabd6ebac5c.tr15241.eastus2-a.worker.database.windows.net,11048

@@ -66,6 +66,9 @@ namespace Arkix.Modules.SellingPoints.Services.ViewModels
         [JsonProperty("status")]
         public string Status { get; set; }
 
+        [JsonProperty("Exclusive")]
+        public int Exclusive { get; set; }
+
         [JsonProperty("createdOnDate")]
         public DateTime CreatedOnDate { get; set; }
 

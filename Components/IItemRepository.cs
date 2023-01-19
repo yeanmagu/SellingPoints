@@ -33,7 +33,7 @@ namespace Arkix.Modules.SellingPoints.Components
 
         IQueryable<SellingPoints> GetItems(string searchTerm, int pageIndex, int pageSize, int PortalId);
 
-        IPagedList<SellingPoints> GetPublicItems(int pageIndex, int pageSize, int portalId);
+        IPagedList<SellingPoints> GetPublicItems(GetMapRequest getMapRequest);
 
         void UpdateItem(SellingPoints t);
     }
