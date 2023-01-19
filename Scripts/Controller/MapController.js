@@ -18,17 +18,18 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
     $scope.items = [];
     $scope.itemsByCity = [];
     $scope.groupItems = [];
+    $scope.Ciudades = [];
+    $scope.CiudadesData = [];
+    $scope.Departamentos = [];
     $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAvEuXv35l1TrUsAtZXMO8UkEmLGAhMvL0&callback=initMap";
     $scope.progress = -1;
     $scope.showGroups = true;
     $scope.parameters = {
+        Exclusive: '0',
+        Department: '',
+        City: '',
     };
     var $self = this;
-
-    $(document).ready(function () {
-        getItems();
-    });
-
 
     if ($.ServicesFramework) {
         var _sf = $.ServicesFramework(ModId);
@@ -50,7 +51,7 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
     //Next method
     $scope.next = function (form) { };
 
-    function getItems(pgIndex = 0) {
+    $scope.search = () => {
         $http({
             method: "POST",
             url: `${$self.ServicePath}Points/GetPublic`,
@@ -61,6 +62,7 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
                 $scope.items = response.data;
                 $scope.fillMarkers($scope.items);
                 $scope.groupItems = groupAndAdd($scope.items);
+                $scope.showGroups = true;
             }
         });
     }
@@ -68,14 +70,11 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
 
     const groupAndAdd = (arr) => {
         const res = [];
-        arr.forEach(el => {
-            if (!this[el.Ciudad]) {
-                this[el.Ciudad] = {
-                    description: el.Ciudad, quantity: 0
-                };
-                res.push(this[el.Ciudad]);
-            };
-            this[el.Ciudad].quantity++;
+        arr.reduce((group, item) => {
+            const { Ciudad } = item;
+            if (!res.includes(Ciudad)) {
+                res.push({ description: Ciudad });
+            }
         }, {});
         return res;
     }
@@ -130,6 +129,29 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
         })(marker, content, infowindow));
     }
 
+    $scope.getDepartments = () => {
+        $http.get('DesktopModules/SellingPoints/Scripts/Departments.json').then(function (response) {
+            $scope.Departamentos = response.data.Data;
+        });
+
+        $http.get('DesktopModules/SellingPoints/Scripts/Cities.json').then(function (response) {
+            $scope.CiudadesData = response.data.Data;
+        });
+        $scope.Ciudades.sort();
+    }
+
+    $scope.changeCiudad = () => {
+        $scope.Ciudades = $scope.CiudadesData[$scope.parameters.Department];
+        $scope.Ciudades.sort();
+    };
+
+
+    $scope.init = () => {
+        $scope.getDepartments();
+        $scope.parameters.Exclusive = '0';
+    }
+
+    $scope.init();
 })
 
     .config(function ($mdGestureProvider) {

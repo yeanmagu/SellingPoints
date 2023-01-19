@@ -87,7 +87,7 @@
         var required = document.querySelectorAll('select[ax-required=true]');
         if (required.length > 0) {
             for (var i = 0; i < required.length; i++) {
-                if (!required[i].value || required[i].value == '' || required[i].value == '? undefined:undefined ?') {
+                if (!required[i].value || required[i].value == '0' || required[i].value == '' || required[i].value == '? undefined:undefined ?') {
                     switch (settings.requiredMode) {
                         case 'span':
                             createRequired(required, i);

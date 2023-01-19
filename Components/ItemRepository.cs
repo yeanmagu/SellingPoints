@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Arkix.Modules.SellingPoints.Services;
 using Arkix.Modules.SellingPoints.Services.ViewModels;
 using DotNetNuke.Collections;
 using DotNetNuke.Common;
@@ -114,14 +115,14 @@ namespace Arkix.Modules.SellingPoints.Components
                     var condition = $"WHERE Status = '{getMapRequest.Status}'";
                     condition += $" and PortalId = {getMapRequest.PortalId}";
 
-                    if (!string.IsNullOrEmpty(getMapRequest.Departamet))
+                    if (!string.IsNullOrEmpty(getMapRequest.Department))
                     {
-                        condition += $" and Departamento = {getMapRequest.Departamet}";
+                        condition += $" and Departamento = '{getMapRequest.Department}'";
                     }
 
                     if (!string.IsNullOrEmpty(getMapRequest.City))
                     {
-                        condition += $" and Ciudad = {getMapRequest.City}";
+                        condition += $" and Ciudad = '{getMapRequest.City}'";
                     }
 
                     if (getMapRequest.Exclusive >0)
@@ -129,6 +130,7 @@ namespace Arkix.Modules.SellingPoints.Components
                         condition += $" and Exclusive = {getMapRequest.Exclusive}";
                     }
 
+                    LogHelper.LOG($"parametros: {condition}");
                     t = rep.Find(condition).AsQueryable();
                 }
 

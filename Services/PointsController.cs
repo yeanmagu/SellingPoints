@@ -49,6 +49,7 @@ namespace Arkix.Modules.SellingPoints.Services
             newItem.CreatedOnDate = DateTime.Now;
             newItem.LastModifiedOnDate = DateTime.Now;
             newItem.PortalId = PortalSettings.PortalId;
+            newItem.Exclusive = model.Exclusive;
             int itemId = model.Id;
             if (itemId > 0)
             {
@@ -91,14 +92,23 @@ namespace Arkix.Modules.SellingPoints.Services
         }
 
         [HttpPost]
+        [ActionName("GetPublic")]
         public async Task<HttpResponseMessage> GetPublic(GetMapRequest getMapRequest)
         {
-            getMapRequest.PageSize = getMapRequest.PageSize == 0 ? getMapRequest.PageSize : 10;
-            ItemRepository itemRepository = new ItemRepository();
+            try
+            {
+                ItemRepository itemRepository = new ItemRepository();
+                getMapRequest.PortalId = PortalSettings.PortalId;
+                LogHelper.LOG($"Consultando información para los siguientes parametros {JsonConvert.SerializeObject(getMapRequest)}");
+                IPagedList<Components.SellingPoints> items = itemRepository.GetPublicItems(getMapRequest);
 
-            IPagedList<Components.SellingPoints> items = itemRepository.GetPublicItems(getMapRequest);
-
-            return Request.CreateResponse(HttpStatusCode.OK, items);
+                return Request.CreateResponse(HttpStatusCode.OK, items);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LOG($"Ha ocurrido un error al consultar los registros error: {ex.Message}, {ex.ToString()}");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         [HttpGet]
@@ -116,11 +126,19 @@ namespace Arkix.Modules.SellingPoints.Services
         [ActionName("Get")]
         public async Task<HttpResponseMessage> GET(int index, int size, string search)
         {
-            ItemRepository itemRepository = new ItemRepository();
+            try
+            {
+                ItemRepository itemRepository = new ItemRepository();
 
-            IQueryable<Components.SellingPoints> items = _repository.GetItems(search, index, size, PortalSettings.PortalId);
+                IQueryable<Components.SellingPoints> items = _repository.GetItems(search, index, size, PortalSettings.PortalId);
 
-            return Request.CreateResponse(HttpStatusCode.OK, items);
+                return Request.CreateResponse(HttpStatusCode.OK, items);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LOG($"Ha ocurrido un error al consultar los registros error: {ex.Message}, {ex.ToString()}");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         [ActionName("AddRecords")]
@@ -159,7 +177,7 @@ namespace Arkix.Modules.SellingPoints.Services
                         if (fileOK)
                         {
                             postedFile.SaveAs(filePath);
-                            var data = ParseCSV.Parse(filePath, 7, ';');
+                            var data = ParseCSV.Parse(filePath, 8, ';');
                             response = await SaveDataFromFile(data);
                         }
 
@@ -198,6 +216,7 @@ namespace Arkix.Modules.SellingPoints.Services
                     recordToSave.Lat = decimal.Parse(row[5]);
                     recordToSave.Long = decimal.Parse(row[6]);
                     recordToSave.Status = "PUBLIC";
+                    recordToSave.Exclusive = row[7] == "Exclusivo" ? 1 : 2;
                     recordToSave.CreatedOnDate = DateTime.Now;
                     recordToSave.LastModifiedOnDate = DateTime.Now;
                     recordToSave.PortalId = PortalSettings.PortalId;

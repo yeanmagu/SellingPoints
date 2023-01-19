@@ -176,6 +176,12 @@
   <ItemGroup>
     <Folder Include="Files\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Cities.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Departments.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

@@ -15,12 +15,12 @@ GO
 CREATE TABLE {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints
 (
 	[Id] INT NOT NULL IDENTITY (1, 1),
-	[Nombre] NVARCHAR(MAX) NULL,
-	[Departamento] NVARCHAR(MAX) NOT NULL,
-	[Ciudad] NVARCHAR(MAX) NOT NULL,
+	[Nombre] NVARCHAR(150) NULL,
+	[Departamento] NVARCHAR(255) NOT NULL,
+	[Ciudad] NVARCHAR(255) NOT NULL,
 	[Description] NVARCHAR(MAX) NULL,
 	[Status] NVARCHAR(20) NOT NULL,
-	[Telefono] NVARCHAR(MAX) NOT NULL,
+	[Telefono] NVARCHAR(20) NOT NULL,
 	[Lat]Decimal(8,6) NOT NULL,
 	[Long]Decimal(9,6) NOT NULL,
 	[PortalId]Int NOT NULL,
@@ -33,9 +33,6 @@ GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}Ax_SellingPoints_SellingPoints] ADD CONSTRAINT [PK_{objectQualifier}Ax_SellingPoints_SellingPoints] PRIMARY KEY CLUSTERED ([Id])
 GO
-
-CREATE INDEX index_Departamento ON {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints (Departamento);
-CREATE INDEX index_Ciudad ON {databaseOwner}{objectQualifier}Ax_SellingPoints_SellingPoints (Ciudad);
 
 
 /************************************************************/
