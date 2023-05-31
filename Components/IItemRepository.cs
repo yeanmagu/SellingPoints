@@ -11,6 +11,7 @@
 */
 
 using System.Linq;
+using Arkix.Modules.SellingPoints.Services.Request;
 using Arkix.Modules.SellingPoints.Services.ViewModels;
 using DotNetNuke.Collections;
 
@@ -30,10 +31,8 @@ namespace Arkix.Modules.SellingPoints.Components
         IQueryable<SellingPoints> GetItems(int moduleId);
 
         IQueryable<SellingPoints> GetItems(GetMapRequest getMapRequest);
-
-        IQueryable<SellingPoints> GetItems(string searchTerm, int pageIndex, int pageSize, int PortalId);
-
         IPagedList<SellingPoints> GetPublicItems(GetMapRequest getMapRequest);
+        IPagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest);
 
         void UpdateItem(SellingPoints t);
     }

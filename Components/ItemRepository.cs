@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Arkix.Modules.SellingPoints.Services;
+using Arkix.Modules.SellingPoints.Services.Request;
 using Arkix.Modules.SellingPoints.Services.ViewModels;
 using DotNetNuke.Collections;
 using DotNetNuke.Common;
@@ -142,7 +143,7 @@ namespace Arkix.Modules.SellingPoints.Components
             }
         }
 
-        public IQueryable<SellingPoints> GetItems(string searchTerm, int pageIndex, int pageSize, int PortalId)
+        private IQueryable<SellingPoints> GetItems(string searchTerm, int PortalId)
         {
             try
             {
@@ -157,7 +158,7 @@ namespace Arkix.Modules.SellingPoints.Components
                 {
                     var rep = ctx.GetRepository<SellingPoints>();
                     condition += $"PortalId = {PortalId}";
-                    t = rep.Find(pageIndex, pageSize, condition).AsQueryable();
+                    t = rep.Find(condition).AsQueryable();
                 }
 
                 return t;
@@ -184,6 +185,15 @@ namespace Arkix.Modules.SellingPoints.Components
             return t;
         }
 
+
+        public IPagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest)
+        {
+            Requires.NotNegative("pageIndex", getMapRequest.PageNumber);
+
+            var t = GetItems(getMapRequest.Search, getMapRequest.PortalId);
+            return new PagedList<SellingPoints>(t, getMapRequest.PageNumber, getMapRequest.PageSize);
+        }
+
         public IPagedList<SellingPoints> GetPublicItems(GetMapRequest getMapRequest)
         {
             Requires.NotNegative("pageIndex", getMapRequest.PageIndex);
@@ -191,7 +201,7 @@ namespace Arkix.Modules.SellingPoints.Components
             var t = GetItems(getMapRequest);
             return new PagedList<SellingPoints>(t, getMapRequest.PageIndex, getMapRequest.PageSize);
         }
-
+       
         public void UpdateItem(SellingPoints t)
         {
             try

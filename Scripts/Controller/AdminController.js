@@ -19,8 +19,13 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
     $scope.progress = -1;
     $scope.showModal = false;
     $scope.showFillCSV = false;
+    $scope.filters = {
+        pageNumber = 0,
+        pageSize = 25,
+        Search
+    };
     $scope.currentPage = 0;
-    $scope.sizePage = 10;
+    $scope.sizePage = 25;
     var $self = this;
     if ($.ServicesFramework) {
         var _sf = $.ServicesFramework(ModuleId);
@@ -72,11 +77,13 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
     $scope.getItems = () => {
         let search = $scope.nameFilter || '';
         $http({
-            method: "GET",
-            url: `${$self.ServicePath}Points/Get?index=${$scope.currentPage}&size=${$scope.sizePage}&search=${search}`,
+            method: "POST",
+            url: `${$self.ServicePath}Points/GetPointsAdmin`,
+            data: $scope.filters,
             headers: $self.Headers,
         }).then(function (response) {
             if (response.status === 200) {
+                console.log(response);
                 $scope.Items = response.data;
             }
         }).catch(function (err) {
@@ -137,10 +144,8 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
             headers: $self.Headers,
         }).then(function (response) {
             if (response.status === 200) {
-                $scope.puntoventa = response.data;
-                $scope.changeCiudad();
-                $scope.puntoventa.Ciudad = response.data.Ciudad;
                 $scope.showForm = true;
+                $scope.puntoventa = response.data;
                 var map = NgMap.getMap().then(function (map) {
                     var marker = new google.maps.Marker({
                         position: {
@@ -154,6 +159,8 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
                         animation: google.maps.Animation.DROP,
                     });
                 });
+                $scope.changeCiudad();
+                $scope.puntoventa.Ciudad = response.data.Ciudad;
                 return;
             }
 

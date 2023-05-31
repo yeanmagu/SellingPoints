@@ -149,6 +149,7 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
     $scope.init = () => {
         $scope.getDepartments();
         $scope.parameters.Exclusive = '0';
+        $scope.search();
     }
 
     $scope.init();

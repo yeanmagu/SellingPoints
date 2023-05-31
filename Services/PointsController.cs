@@ -14,7 +14,7 @@ using DotNetNuke.Collections;
 using System.Web;
 using Newtonsoft.Json;
 using System.IO;
-
+using Arkix.Modules.SellingPoints.Services.Request;
 namespace Arkix.Modules.SellingPoints.Services
 {
     //[SupportedModules("SellingPoints")]
@@ -132,6 +132,24 @@ namespace Arkix.Modules.SellingPoints.Services
 
                 IQueryable<Components.SellingPoints> items = _repository.GetItems(search, index, size, PortalSettings.PortalId);
 
+                return Request.CreateResponse(HttpStatusCode.OK, items);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LOG($"Ha ocurrido un error al consultar los registros error: {ex.Message}, {ex.ToString()}");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        [HttpGet]
+        [ActionName("GetPointsAdmin")]
+        public async Task<HttpResponseMessage> GetSellingPoints(SellingPointRequest request)
+        {
+            try
+            {
+                ItemRepository itemRepository = new ItemRepository();
+                request.PortalId = PortalSettings.PortalId;
+                var items = _repository.GetAdminItems(request);
                 return Request.CreateResponse(HttpStatusCode.OK, items);
             }
             catch (Exception ex)
