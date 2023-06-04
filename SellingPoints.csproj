@@ -158,6 +158,7 @@
     <Compile Include="Services\UserController.cs" />
     <Compile Include="Services\ViewModels\GetMapRequest.cs" />
     <Compile Include="Services\ViewModels\Paginated.cs" />
+    <Compile Include="Services\ViewModels\PointsByCity.cs" />
     <Compile Include="Services\ViewModels\PointViewModel.cs" />
     <Compile Include="Services\ViewModels\UserViewModel.cs" />
   </ItemGroup>

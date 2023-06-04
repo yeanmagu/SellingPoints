@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Arkix.Modules.SellingPoints.Services.ViewModels
+﻿namespace Arkix.Modules.SellingPoints.Services.ViewModels
 {
     public class Paginated
     {

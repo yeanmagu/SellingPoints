@@ -160,5 +160,14 @@
         return patron.test(tecla_final);
     }
 
+    msjWithHtml = (title, msj, type, buttonText = 'Aceptar')=> {
+        swal.fire({
+            title: title,
+            html: msj,
+            type: type,
+            confirmButtonText: buttonText,
+            confirmButtonColor: "#0f0f38",
+        });
+    }
 
 })();

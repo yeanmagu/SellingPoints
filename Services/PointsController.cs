@@ -35,7 +35,7 @@ namespace Arkix.Modules.SellingPoints.Services
 
         [HttpPost]
         [ActionName("Post")]
-        public async Task<HttpResponseMessage> Post(PointViewModel model)
+        public HttpResponseMessage Post(PointViewModel model)
         {
             Components.SellingPoints newItem = new Components.SellingPoints();
             newItem.Nombre = model.Nombre;  //model.FullName;
@@ -73,7 +73,7 @@ namespace Arkix.Modules.SellingPoints.Services
         }
 
         [HttpPut]
-        public async Task<HttpResponseMessage> Public(int itemId)
+        public HttpResponseMessage Public(int itemId)
         {
             ItemRepository itemRepository = new ItemRepository();
             Components.SellingPoints item = itemRepository.GetItem(itemId);
@@ -93,16 +93,54 @@ namespace Arkix.Modules.SellingPoints.Services
 
         [HttpPost]
         [ActionName("GetPublic")]
-        public async Task<HttpResponseMessage> GetPublic(GetMapRequest getMapRequest)
+        public HttpResponseMessage GetPublic(GetMapRequest getMapRequest)
         {
             try
             {
                 ItemRepository itemRepository = new ItemRepository();
                 getMapRequest.PortalId = PortalSettings.PortalId;
                 LogHelper.LOG($"Consultando información para los siguientes parametros {JsonConvert.SerializeObject(getMapRequest)}");
-                IPagedList<Components.SellingPoints> items = itemRepository.GetPublicItems(getMapRequest);
+                IPagedList<PointsByCity> items = itemRepository.GetPublicItems(getMapRequest);
 
-                return Request.CreateResponse(HttpStatusCode.OK, items);
+                return Request.CreateResponse(HttpStatusCode.OK, new { data=items,
+                    items.HasNextPage,
+                    items.HasPreviousPage,
+                    items.IsFirstPage,
+                    items.IsLastPage,
+                    items.PageCount,
+                    items.PageIndex,
+                    items.PageSize,
+                    items.TotalCount
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.LOG($"Ha ocurrido un error al consultar los registros error: {ex.Message}, {ex.ToString()}");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        [HttpPost]
+        [ActionName("GetPublicByCity")]
+        public HttpResponseMessage GetPublicByCityAndDepartmemt(GetMapRequest getMapRequest)
+        {
+            try
+            {
+                ItemRepository itemRepository = new ItemRepository();
+                getMapRequest.PortalId = PortalSettings.PortalId;
+                LogHelper.LOG($"Consultando información para los siguientes parametros {JsonConvert.SerializeObject(getMapRequest)}");
+                IPagedList<Components.SellingPoints> items = itemRepository.GetPublicByCity(getMapRequest);
+
+                return Request.CreateResponse(HttpStatusCode.OK, new { Data=items,
+                    items.HasNextPage,
+                    items.HasPreviousPage,
+                    items.IsFirstPage,
+                    items.IsLastPage,
+                    items.PageCount,
+                    items.PageIndex,
+                    items.PageSize,
+                    items.TotalCount
+                });
             }
             catch (Exception ex)
             {
@@ -113,7 +151,7 @@ namespace Arkix.Modules.SellingPoints.Services
 
         [HttpGet]
         [ActionName("GetById")]
-        public async Task<HttpResponseMessage> GetById(int id)
+        public HttpResponseMessage GetById(int id)
         {
             ItemRepository itemRepository = new ItemRepository();
 
@@ -122,35 +160,27 @@ namespace Arkix.Modules.SellingPoints.Services
             return Request.CreateResponse(HttpStatusCode.OK, items);
         }
 
-        [HttpGet]
-        [ActionName("Get")]
-        public async Task<HttpResponseMessage> GET(int index, int size, string search)
-        {
-            try
-            {
-                ItemRepository itemRepository = new ItemRepository();
-
-                IQueryable<Components.SellingPoints> items = _repository.GetItems(search, index, size, PortalSettings.PortalId);
-
-                return Request.CreateResponse(HttpStatusCode.OK, items);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.LOG($"Ha ocurrido un error al consultar los registros error: {ex.Message}, {ex.ToString()}");
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
-            }
-        }
-
-        [HttpGet]
+        [HttpPost]
         [ActionName("GetPointsAdmin")]
-        public async Task<HttpResponseMessage> GetSellingPoints(SellingPointRequest request)
+        public HttpResponseMessage GetSellingPoints(SellingPointRequest request)
         {
             try
             {
                 ItemRepository itemRepository = new ItemRepository();
                 request.PortalId = PortalSettings.PortalId;
                 var items = _repository.GetAdminItems(request);
-                return Request.CreateResponse(HttpStatusCode.OK, items);
+                return Request.CreateResponse(HttpStatusCode.OK, new
+                {
+                    data = items,
+                    items.HasNextPage,
+                    items.HasPreviousPage,
+                    items.IsFirstPage,
+                    items.IsLastPage,
+                    items.PageCount,
+                    items.PageIndex,
+                    items.PageSize,
+                    items.TotalCount
+                });
             }
             catch (Exception ex)
             {
@@ -162,7 +192,7 @@ namespace Arkix.Modules.SellingPoints.Services
         [ActionName("AddRecords")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> AddFile()
+        public HttpResponseMessage AddFile()
         {
             var response = string.Empty;
             try
@@ -196,7 +226,7 @@ namespace Arkix.Modules.SellingPoints.Services
                         {
                             postedFile.SaveAs(filePath);
                             var data = ParseCSV.Parse(filePath, 8, ';');
-                            response = await SaveDataFromFile(data);
+                            response = SaveDataFromFile(data);
                         }
 
                     }
@@ -215,7 +245,7 @@ namespace Arkix.Modules.SellingPoints.Services
             }
         }
 
-        private async Task<string> SaveDataFromFile(List<string[]> data)
+        private string SaveDataFromFile(List<string[]> data)
         {
             var recordsSaved = 0;
             var totalRecords = data.Count - 1;

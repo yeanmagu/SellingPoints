@@ -43,7 +43,7 @@
                 <div>
                     <div class="form-group">
                         <label class="control-label">Departamento <span class="cRequerido">*</span></label>
-                        <select name="departamento" id="departamento" ng-model="parameters.Departament" ng-change="changeCiudad()" ax-required="true" ax-required-text="*Este campo es requerido" class="form-control">
+                        <select name="departamento" id="departamento" ng-model="parameters.Department" ng-change="changeCiudad()" ax-required="true" ax-required-text="*Este campo es requerido" class="form-control">
                             <option value="">Todos</option>
                             <option ng-repeat="dep in Departamentos" value="{{dep}}"> {{dep}}</option>
                         </select>
@@ -71,7 +71,7 @@
                 </div>
                 <div>
 
-                    <button type="button" class="ax-button ax-guardar" ng-click="search()">Buscar</button>
+                    <button type="button" class="ax-button ax-guardar" ng-click="searchFilter()">Buscar</button>
                 </div>
             </div>
             <div class="row">
@@ -80,8 +80,28 @@
                         <div class="slide-body">
                             <div ng-repeat="item in groupItems " class="local" ng-show="showGroups">
                                 <div class="">
-                                    <h6><a style="cursor:pointer; text-decoration:none" ng-click="showByCity(item.description)">{{item.description}} <span class="flecha">></span></a></h6>
+                                    <h6><a style="cursor:pointer; text-decoration:none" ng-click="showByCity(item.Ciudad, item.Departamento)">{{item.Ciudad}} <span class="flecha">></span></a></h6>
                                 </div>
+
+                            </div>
+                            <div class="pagination pull-right" ng-show="showGroups">
+                                <ul class="ct-paginador">
+                                    <li ng-class="{disabled: items.IsFirstPage}">
+                                        <a class="btn-buscar" ng-click="setPage(0)"><<</a>
+                                    </li>
+                                    <li ng-class="{disabled: !items.HasPreviousPage}">
+                                        <a class="btn-buscar" ng-click="prevPage()"><</a>
+                                    </li>
+                                    <!--<li ng-repeat="n in range(items.PageCount, items.PageIndex, (items.PageCount>5? items.PageIndex+5: items.PageIndex))" ng-class="{active: n == items.PageIndex}" ng-click="setPage(n)">
+                                        <a ng-bind="n + 1">1</a>
+                                    </li>-->
+                                    <li ng-class="{disabled: !items.HasNextPage}">
+                                        <a class="btn-buscar" ng-click="nextPage()">></a>
+                                    </li>
+                                    <li ng-class="{disabled: items.IsLastPage}">
+                                        <a class="btn-buscar" ng-click="setPage(items.PageCount-1)">>></a>
+                                    </li>
+                                </ul>
                             </div>
                             <div ng-show="!showGroups">
                                 <div>

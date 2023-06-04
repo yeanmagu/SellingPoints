@@ -1,32 +1,35 @@
-﻿
-
-//angular.module('appContegralMap.map', ['ngMaterial', 'ngMessages', 'ngMap']).
-//    /* Drivers controller */
-//    controller('MapController', function ($scope) {
-//        function OfferController(ngMap) {
-//            ngMap.getMap();
-//        }
-//        OfferController.$inject = ["NgMap"];
-//        return OfferController;
-//    }).
-
-
-
-/* Driver controller */
-CustomModule.controller("MapController", function ($scope, $http, NgMap) {
+﻿CustomModule.controller("MapController", function ($scope, $http, NgMap) {
     $scope.center = '6.255775, -75.574846';
-    $scope.items = [];
+    const INDICE_INICIAL = 0;
+    const PAGE_INICIAL = 0;
+    $scope.Items = {
+        HasNextPage: false,
+        HasPreviousPage: false,
+        IsFirstPage: false,
+        IsLastPage: false,
+        PageCount: 0,
+        PageIndex: 0,
+        PageSize: 100,
+        TotalCount: 0
+    };
     $scope.itemsByCity = [];
     $scope.groupItems = [];
     $scope.Ciudades = [];
     $scope.CiudadesData = [];
     $scope.Departamentos = [];
-    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAvEuXv35l1TrUsAtZXMO8UkEmLGAhMvL0&callback=initMap";
+    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCjiqW2J0yWumnHzg1VxOI5-uMeftpwGr0&callback=initMap";
     $scope.progress = -1;
     $scope.showGroups = true;
     $scope.parameters = {
+        PageNumber: INDICE_INICIAL,
+        PageSize: PAGE_INICIAL,
         Exclusive: '0',
         Department: '',
+        City: '',
+    };
+    $scope.parametersByCity = {
+        PageNumber: INDICE_INICIAL,
+        PageSize: PAGE_INICIAL,
         City: '',
     };
     var $self = this;
@@ -48,9 +51,46 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
         return option == 'form'
     }
 
+    $scope.prevPage = function () {
+        if ($scope.items.PageIndex > 0) {
+            $scope.items.PageIndex--;
+            $scope.parameters.PageNumber = $scope.items.PageIndex;
+            $scope.search();
+        }
+    }
+
+    $scope.nextPage = function () {
+        if ($scope.items.PageIndex < $scope.items.PageCount) {
+            $scope.items.PageIndex++
+            $scope.parameters.PageNumber = $scope.items.PageIndex;
+            $scope.search();
+        }
+    }
+
+    $scope.setPage = function (page) {
+        $scope.parameters.PageNumber = page;
+        $scope.search();
+    };
+
+    $scope.range = function (size, start, end) {
+        var ret = [];
+        if (size < end) {
+            end = size;
+            start = size - $scope.gap;
+        }
+        for (var i = start; i < end; i++) {
+            ret.push(i);
+        }
+        return ret;
+    };
+
     //Next method
     $scope.next = function (form) { };
-
+    $scope.searchFilter = () => {
+        $scope.parameters.PageNumber = INDICE_INICIAL;
+        $scope.parameters.PageNumber = PAGE_INICIAL;
+        $scope.search();
+    }
     $scope.search = () => {
         $http({
             method: "POST",
@@ -60,31 +100,29 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
         }).then(function (response) {
             if (response.status === 200) {
                 $scope.items = response.data;
-                $scope.fillMarkers($scope.items);
-                $scope.groupItems = groupAndAdd($scope.items);
+                //$scope.fillMarkers($scope.items);
+                $scope.groupItems = $scope.items.data//groupAndAdd($scope.items);
                 $scope.showGroups = true;
             }
         });
     }
 
-
-    const groupAndAdd = (arr) => {
-        const res = [];
-        arr.reduce((group, item) => {
-            const { Ciudad } = item;
-            if (!res.includes(Ciudad)) {
-                res.push({ description: Ciudad });
+    $scope.showByCity = (city, department) => {
+        $scope.parametersByCity.City = city;
+        $scope.parametersByCity.Department = department;
+        $http({
+            method: "POST",
+            url: `${$self.ServicePath}Points/GetPublicByCity`,
+            data: $scope.parametersByCity,
+            headers: $self.Headers,
+        }).then(function (response) {
+            if (response.status === 200) {
+                $scope.Items = response.data;
+                $scope.itemsByCity = $scope.Items.Data;
+                $scope.showGroups = false;
+                $scope.fillMarkers($scope.itemsByCity);
             }
-        }, {});
-        return res;
-    }
-
-    $scope.showByCity = (city) => {
-        $scope.itemsByCity = $scope.items.filter(c => c.Ciudad == city);
-        if ($scope.itemsByCity) {
-            $scope.showGroups = false;
-            $scope.fillMarkers($scope.itemsByCity);
-        }
+        });
     }
 
     $scope.fillMarkers = (items) => {
@@ -144,7 +182,6 @@ CustomModule.controller("MapController", function ($scope, $http, NgMap) {
         $scope.Ciudades = $scope.CiudadesData[$scope.parameters.Department];
         $scope.Ciudades.sort();
     };
-
 
     $scope.init = () => {
         $scope.getDepartments();

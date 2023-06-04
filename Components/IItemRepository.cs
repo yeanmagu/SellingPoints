@@ -31,8 +31,9 @@ namespace Arkix.Modules.SellingPoints.Components
         IQueryable<SellingPoints> GetItems(int moduleId);
 
         IQueryable<SellingPoints> GetItems(GetMapRequest getMapRequest);
-        IPagedList<SellingPoints> GetPublicItems(GetMapRequest getMapRequest);
-        IPagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest);
+        IPagedList<PointsByCity> GetPublicItems(GetMapRequest getMapRequest);
+        IPagedList<SellingPoints> GetPublicByCity(GetMapRequest getMapRequest);
+        PagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest);
 
         void UpdateItem(SellingPoints t);
     }

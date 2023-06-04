@@ -1,9 +1,21 @@
 ﻿/* Driver controller */
 CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
-    $scope.Items = [];
+    const INDICE_INICIAL = 0;
+    const PAGE_INICIAL = 0;
+    $scope.Items = {
+        HasNextPage: false,
+        HasPreviousPage: false,
+        IsFirstPage: false,
+        IsLastPage: false,
+        PageCount: 0,
+        PageIndex: 0,
+        PageSize: 10,
+        TotalCount: 0
+    };
+    $scope.gap = 10;
     $scope.index = 0;
     $scope.center = '6.255775, -75.574846';
-    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAvEuXv35l1TrUsAtZXMO8UkEmLGAhMvL0&callback=initMap";
+    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCjiqW2J0yWumnHzg1VxOI5-uMeftpwGr0&callback=initMap";
     $scope.myLatLng = {
         lat: 6.255775,
         lng: -75.574846
@@ -19,13 +31,7 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
     $scope.progress = -1;
     $scope.showModal = false;
     $scope.showFillCSV = false;
-    $scope.filters = {
-        pageNumber = 0,
-        pageSize = 25,
-        Search
-    };
-    $scope.currentPage = 0;
-    $scope.sizePage = 25;
+
     var $self = this;
     if ($.ServicesFramework) {
         var _sf = $.ServicesFramework(ModuleId);
@@ -74,8 +80,20 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
 
     }).catch(e => console.log(e));
 
+    $scope.initializeFilter = (searchText = '') => {
+        $scope.filters = {
+            PageNumber: INDICE_INICIAL,
+            PageSize: PAGE_INICIAL,
+            Search: searchText
+        };
+    }
+
+    $scope.search = () => {
+        $scope.initializeFilter($scope.filters.Search);
+        $scope.getItems();
+    }
+
     $scope.getItems = () => {
-        let search = $scope.nameFilter || '';
         $http({
             method: "POST",
             url: `${$self.ServicePath}Points/GetPointsAdmin`,
@@ -83,7 +101,6 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
             headers: $self.Headers,
         }).then(function (response) {
             if (response.status === 200) {
-                console.log(response);
                 $scope.Items = response.data;
             }
         }).catch(function (err) {
@@ -106,18 +123,24 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
     };
 
     $scope.prevPage = function () {
-        if ($scope.currentPage > 0) {
-            $scope.currentPage--;
+        if ($scope.Items.PageIndex > 0) {
+            $scope.Items.PageIndex--;
+            $scope.filters.PageNumber = $scope.Items.PageIndex;
             $scope.getItems();
         }
-    };
-
+    }
 
     $scope.nextPage = function () {
-        if ($scope.currentPage < $scope.Items.length - 1) {
-            $scope.currentPage++;
+        if ($scope.Items.PageIndex < $scope.Items.PageCount) {
+            $scope.Items.PageIndex++
+            $scope.filters.PageNumber = $scope.Items.PageIndex;
             $scope.getItems();
         }
+    }
+
+    $scope.setPage = function (page) {
+        $scope.filters.PageNumber = page;
+        $scope.getItems();
     };
 
     $scope.range = function (size, start, end) {
@@ -189,6 +212,7 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
                 $scope.disableBtn = false;
                 $scope.progress = -1;
                 $scope.showModal = true;
+                msjWithHtml('Operación completada con éxito!', `La información se ha guardado correctamente!`, 'success');
                 $scope.getItems();
                 return;
             }
@@ -196,7 +220,7 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
         },
             function (response) {
                 if (response.status === 500) {
-                    showAlert('Ha ocurrido un error al tratar de guardar la información')
+                    msjWithHtml('La operación no pudo ser procesada!', `Ha ocurrido un error al tratar de guardar la información`, 'error');
                 }
             });
     }
@@ -213,12 +237,18 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
         });
         conten.insertAdjacentElement("beforebegin", ul);
     }
+
     $scope.showUpload = () => {
         $scope.showFillCSV = true;
     }
+
     $scope.uploadFile = function () {
         if (!$scope.file) {
-            showAlert('Por favor adjunte un archivo con extensión .CSV para poder realizar el envio de la información', 'warning');
+            msjWithHtml('Oops!', "Por favor adjunte un archivo con extensión .CSV para poder realizar el envio de la información", 'warning');
+            return
+        }
+        if (!$scope.file[0].type.includes('csv')) {
+            msjWithHtml('Oops!', "Por favor Adjunte un archivo con extension .csv", 'warning');
             return
         }
         showLoading();
@@ -237,7 +267,7 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
                 $scope.picture = null;
                 $scope.filename = "";
                 document.getElementById('Adjunto').value = null;
-                showAlert(`La información del archivo se ha cargado correctamente! <br> ${response.data}`, 'success');
+                msjWithHtml('Operación completada con éxito!', `La información del archivo se ha cargado correctamente! <br> ${response.data}`, 'success');
                 $scope.getItems();
                 hideLoading();
             },
@@ -262,17 +292,18 @@ CustomModule.controller("AdminController", function ($scope, $http, NgMap) {
         $http.get('DesktopModules/SellingPoints/Scripts/Cities.json').then(function (response) {
             $scope.CiudadesData = response.data.Data;
         });
-        
+
         $scope.Ciudades.sort();
     }
 
     $scope.changeCiudad = function () {
-           
-            $scope.Ciudades = $scope.CiudadesData[$scope.puntoventa.Departamento];
-            $scope.Ciudades.sort();
-      
+
+        $scope.Ciudades = $scope.CiudadesData[$scope.puntoventa.Departamento];
+        $scope.Ciudades.sort();
+
     };
 
     getDepartments();
+    $scope.initializeFilter();
     $scope.getItems();
 });

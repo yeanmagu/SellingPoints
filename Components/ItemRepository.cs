@@ -47,7 +47,7 @@ namespace Arkix.Modules.SellingPoints.Components
             }
             catch (Exception ex)
             {
-                if (t.Id> 0)
+                if (t.Id > 0)
                 {
                     return t.Id;
                 }
@@ -126,7 +126,7 @@ namespace Arkix.Modules.SellingPoints.Components
                         condition += $" and Ciudad = '{getMapRequest.City}'";
                     }
 
-                    if (getMapRequest.Exclusive >0)
+                    if (getMapRequest.Exclusive > 0)
                     {
                         condition += $" and Exclusive = {getMapRequest.Exclusive}";
                     }
@@ -136,6 +136,48 @@ namespace Arkix.Modules.SellingPoints.Components
                 }
 
                 return t;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IQueryable<PointsByCity> GetPublishItemsGroupByCity(GetMapRequest getMapRequest)
+        {
+            try
+            {
+                IQueryable<PointsByCity> filteredData = null;
+
+                using (IDataContext ctx = DataContext.Instance())
+                {
+                    //var rep = ctx.GetRepository<SellingPoints>();
+
+                    var condition = $"WHERE Status = '{getMapRequest.Status}'";
+                    condition += $" and PortalId = {getMapRequest.PortalId}";
+
+                    if (!string.IsNullOrEmpty(getMapRequest.Department))
+                    {
+                        condition += $" and Departamento = '{getMapRequest.Department}'";
+                    }
+
+                    if (!string.IsNullOrEmpty(getMapRequest.City))
+                    {
+                        condition += $" and Ciudad = '{getMapRequest.City}'";
+                    }
+
+                    if (getMapRequest.Exclusive > 0)
+                    {
+                        condition += $" and Exclusive = {getMapRequest.Exclusive}";
+                    }
+                    filteredData = ctx.ExecuteQuery<PointsByCity>(System.Data.CommandType.Text,
+                        @"SELECT Ciudad, Departamento, COUNT(*) AS Total
+                          FROM Ax_SellingPoints_SellingPoints "
+                          + condition +
+                          "GROUP BY Ciudad, Departamento").AsQueryable();
+                }
+
+                return filteredData;
             }
             catch (Exception ex)
             {
@@ -186,7 +228,7 @@ namespace Arkix.Modules.SellingPoints.Components
         }
 
 
-        public IPagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest)
+        public PagedList<SellingPoints> GetAdminItems(SellingPointRequest getMapRequest)
         {
             Requires.NotNegative("pageIndex", getMapRequest.PageNumber);
 
@@ -194,14 +236,15 @@ namespace Arkix.Modules.SellingPoints.Components
             return new PagedList<SellingPoints>(t, getMapRequest.PageNumber, getMapRequest.PageSize);
         }
 
-        public IPagedList<SellingPoints> GetPublicItems(GetMapRequest getMapRequest)
+        public IPagedList<PointsByCity> GetPublicItems(GetMapRequest getMapRequest)
         {
-            Requires.NotNegative("pageIndex", getMapRequest.PageIndex);
+            Requires.NotNegative("pageIndex", getMapRequest.PageNumber);
 
-            var t = GetItems(getMapRequest);
-            return new PagedList<SellingPoints>(t, getMapRequest.PageIndex, getMapRequest.PageSize);
+            var filteredData = GetPublishItemsGroupByCity(getMapRequest);
+
+            return new PagedList<PointsByCity>(filteredData, getMapRequest.PageNumber, getMapRequest.PageSize);
         }
-       
+
         public void UpdateItem(SellingPoints t)
         {
             try
@@ -217,10 +260,42 @@ namespace Arkix.Modules.SellingPoints.Components
             }
             catch (Exception ex)
             {
-                if (t.Id>0)
+                if (t.Id > 0)
                 {
                     return;
                 }
+                throw ex;
+            }
+        }
+
+        public IPagedList<SellingPoints> GetPublicByCity(GetMapRequest getMapRequest)
+        {
+            try
+            {
+                IQueryable<SellingPoints> filteredData = null;
+
+                using (IDataContext ctx = DataContext.Instance())
+                {
+                    var rep = ctx.GetRepository<SellingPoints>();
+                    var condition = $"WHERE Status = '{getMapRequest.Status}'";
+                    condition += $" and PortalId = {getMapRequest.PortalId}";
+
+                    if (!string.IsNullOrEmpty(getMapRequest.Department))
+                    {
+                        condition += $" and Departamento = '{getMapRequest.Department}'";
+                    }
+
+                    if (!string.IsNullOrEmpty(getMapRequest.City))
+                    {
+                        condition += $" and Ciudad = '{getMapRequest.City}'";
+                    }
+                    filteredData = rep.Find($"{condition}").AsQueryable();
+
+                    return new PagedList<SellingPoints>(filteredData, getMapRequest.PageNumber, getMapRequest.PageSize);
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
